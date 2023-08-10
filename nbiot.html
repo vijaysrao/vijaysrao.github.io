@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+<script src="main.js" type="text/javascript"></script>
+<title>NB-IoT Energy Calculator</title>
+</head>
+<body>
+<!-- script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-2725246-3']);
+_gaq.push(['_trackPageview']);
+(function() {
+ var ga = document.createElement('script'); ga.type =
+ 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl'
+   : 'http://www') + '.google-analytics.com/ga.js';
+ var s = document.getElementsByTagName('script')[0];
+ s.parentNode.insertBefore(ga, s);
+ })();
+</script -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-130690940-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', "UA-130690940-4");
+</script>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category">Vijay S. Rao</div>
+<div class="menu-item"><a href="index.html">Home</a></div>
+<div class="menu-item"><a href="cv.html">CV</a></div>
+<div class="menu-category">Research</div>
+<div class="menu-item"><a href="publications.html">Publications</a></div>
+<div class="menu-item"><a href="talks.html">Talks</a></div>
+<div class="menu-category">Software</div>
+<div class="menu-item"><a href="nbiot.html" class="current">NB-IoT&nbsp;Calculator</a></div>
+<div class="menu-category">Professional Activities</div>
+<div class="menu-item"><a href="activities.html">Activities</a></div>
+<div class="menu-category">Help!</div>
+<div class="menu-item"><a href="deepa.html">For&nbsp;a&nbsp;social&nbsp;cause</a></div>
+</td>
+<td id="layout-content">
+<div id="toptitle">
+<h1>Narrowband IoT (NB-IoT) Energy Consumption Calculator</h1>
+</div>
+<h2>About the tool</h2>
+<p>This page presents an energy-consumption calculator for Narrowband-IoT (NB-IoT) devices based on actual measurements. We have profiled the energy consumption for <a href="https://www.u-blox.com/sites/default/files/SARA-N2_DataSheet_(UBX-15025564).pdf">U-Blox SARA N211</a>. Based on the characterization, this calculator allows you to input several parameters (time in cDRX/eDRX/PSM modes, payload size, coverage levels etc.), and computes the energy consumed for such a configuration. </p>
+<table class="imgtable"><tr><td>
+<img src="nbiot-seq.png" alt="NB-IoT Payload Exchange Sequence" width="184px" height="251px" />&nbsp;</td>
+<td align="left"><p>The figure on the left shows the payload exchange sequence of NB-IoT. This tool currently allows for energy calculation only for this sequence at the moment (i.e., cell attach procedure and cell reselection procedures are not considered yet). <br /></p>
+<p>As NB-IoT employs several parameters that vary dynamically, it is not possible to accurately determine the energy consumed. For instance, even when the coverage is known, the modulation and coding (MCS) scheme employed determines the number of subframes across which the payload is split. Several approximations are done based on the observations from our measurements. <br /></p>
+</td></tr></table>
+<p>We will improve the tool with more measurements in the future. Stay tuned! Send in your your feedback to V &lt;dot&gt; Rao &lt;at&gt; tudelft.nl.</p>
+<h2>The Tool</h2>
+<p>Input the values and press the &ldquo;Compute&rdquo; button.</p>
+
+<div style="display: table; width: 200px">
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">Cell coverage: </label>
+    <select id="coverage" style="font-size: 14px; display: table-cell">
+        <option value="0">Good (0)</option>
+        <option value="1">Average (1)</option>
+    </select>
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">Uplink data size (B): </label>
+    <input id="up_data" style="display: table-cell">
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">Downlink data size (B): </label>
+    <input id="dn_data" style="display: table-cell">
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">cDRX time/Inactive Timer (s): </label>
+    <input id="cdrx_time" style="display: table-cell"> 
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">cDRX duty cycle: </label>
+    <input id="cdrx_dc" style="display: table-cell">
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">iDRX time/Active Timer (s): </label>
+    <input id="idrx_time" style="display: table-cell"> 
+</p>
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">iDRX duty cycle: </label>
+    <input id="idrx_dc" style="display: table-cell">
+</p>
+<!-- p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">PSM time (s): </label>
+    <input id="psm_time" style="display: table-cell">
+</p -->
+<p style="display: table-row">
+    <label style="display: table-cell; white-space: nowrap">Number of payload transmissions per day: </label>
+    <input id="freq" style="display: table-cell">
+</p>
+</div>
+<button type="button" onclick="onClear()">Clear</button>
+<button type="button" onclick="onComputeEnergy()">Compute</button>
+<p id="calc"></p>
+<h2>Acknowledgements</h2>
+<p>Ir. Anand Haridas <br /></p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2018-12-10 05:43:43 CET, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>
